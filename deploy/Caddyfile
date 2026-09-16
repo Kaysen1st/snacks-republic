@@ -1,0 +1,7 @@
+snacks-staging.47-129-136-41.sslip.io {
+    reverse_proxy app:3001
+}
+
+:80 {
+    redir https://snacks-staging.47-129-136-41.sslip.io{uri} permanent
+}

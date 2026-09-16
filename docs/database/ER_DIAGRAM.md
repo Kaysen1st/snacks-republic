@@ -1,0 +1,41 @@
+# Database relationships
+
+Generated from the migrated MySQL foreign keys. Every application table ends with deleted_at, created_at, updated_at.
+
+~~~mermaid
+erDiagram
+  staff ||--o{ audit_logs : "staff_id"
+  orders ||--o{ idempotency_keys : "order_id"
+  units ||--o{ ingredients : "unit_id"
+  ingredients ||--o{ inventory_balances : "ingredient_id"
+  ingredients ||--o{ inventory_movements : "ingredient_id"
+  order_items ||--o{ inventory_movements : "order_item_id"
+  inventory_movements ||--o{ inventory_movements : "reversal_id"
+  staff ||--o{ inventory_movements : "staff_id"
+  ingredients ||--o{ option_recipe_items : "ingredient_id"
+  variant_options ||--o{ option_recipe_items : "variant_option_id"
+  option_groups ||--o{ options : "option_group_id"
+  options ||--o{ order_item_options : "option_id"
+  order_items ||--o{ order_item_options : "order_item_id"
+  orders ||--o{ order_items : "order_id"
+  product_variants ||--o{ order_items : "variant_id"
+  orders ||--o{ order_status_history : "order_id"
+  staff ||--o{ order_status_history : "staff_id"
+  customers ||--o{ orders : "customer_id"
+  staff ||--o{ orders : "staff_id"
+  orders ||--o{ payments : "order_id"
+  staff ||--o{ payments : "staff_id"
+  option_groups ||--o{ product_option_groups : "option_group_id"
+  products ||--o{ product_option_groups : "product_id"
+  products ||--o{ product_variants : "product_id"
+  serving_options ||--o{ product_variants : "serving_option_id"
+  categories ||--o{ products : "category_id"
+  ingredients ||--o{ recipe_items : "ingredient_id"
+  product_variants ||--o{ recipe_items : "variant_id"
+  payments ||--o{ refunds : "payment_id"
+  staff ||--o{ refunds : "staff_id"
+  roles ||--o{ staff : "role_id"
+  staff ||--o{ staff_sessions : "staff_id"
+  options ||--o{ variant_options : "option_id"
+  product_variants ||--o{ variant_options : "variant_id"
+~~~

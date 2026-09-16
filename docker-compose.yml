@@ -1,0 +1,85 @@
+services:
+  db:
+    image: mysql:8.4
+    restart: unless-stopped
+    env_file: .env.docker
+    volumes:
+      - mysql-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h 127.0.0.1 -u root -p$$MYSQL_ROOT_PASSWORD --silent"]
+      interval: 5s
+      timeout: 5s
+      retries: 30
+
+  app:
+    image: snacks-republic-staging-app:latest
+    build: .
+    restart: unless-stopped
+    env_file: .env.docker
+    environment:
+      NODE_ENV: production
+      HOST: 0.0.0.0
+      DB_HOST: db
+      DB_PORT: 3306
+    expose:
+      - "3001"
+    depends_on:
+      db:
+        condition: service_healthy
+
+  proxy:
+    image: caddy:2-alpine
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./deploy/Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy-data:/data
+      - caddy-config:/config
+    depends_on:
+      - app
+
+  migrate:
+    profiles: ["setup"]
+    image: snacks-republic-staging-app:latest
+    env_file: .env.docker
+    environment:
+      NODE_ENV: production
+      DB_HOST: db
+      DB_PORT: 3306
+    command: ["node", "dist/server/backend/src/database/cli.js", "migrate"]
+    depends_on:
+      db:
+        condition: service_healthy
+
+  seed:
+    profiles: ["setup"]
+    image: snacks-republic-staging-app:latest
+    env_file: .env.docker
+    environment:
+      NODE_ENV: production
+      DB_HOST: db
+      DB_PORT: 3306
+    command: ["node", "dist/server/backend/src/database/cli.js", "seed"]
+    depends_on:
+      db:
+        condition: service_healthy
+
+  staff:
+    profiles: ["setup"]
+    image: snacks-republic-staging-app:latest
+    env_file: .env.docker
+    environment:
+      NODE_ENV: production
+      DB_HOST: db
+      DB_PORT: 3306
+    command: ["node", "dist/server/backend/src/database/create-staff.js"]
+    depends_on:
+      db:
+        condition: service_healthy
+
+volumes:
+  mysql-data:
+  caddy-data:
+  caddy-config:

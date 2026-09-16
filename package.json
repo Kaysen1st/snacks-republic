@@ -1,0 +1,63 @@
+{
+  "name": "snacks-republic",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=22.12"
+  },
+  "scripts": {
+    "dev": "concurrently -k -n api,web \"npm:dev:api\" \"npm:dev:web\"",
+    "dev:api": "tsx watch src/backend/src/server.ts",
+    "dev:web": "vite --host 127.0.0.1",
+    "build": "npm run typecheck && vite build && tsc -p tsconfig.backend.json",
+    "start": "node dist/server/backend/src/server.js",
+    "typecheck": "tsc --noEmit && tsc -p tsconfig.backend.json --noEmit",
+    "lint": "eslint .",
+    "test": "vitest run",
+    "test:e2e": "playwright test",
+    "db:migrate": "tsx src/backend/src/database/cli.ts migrate",
+    "db:rollback": "tsx src/backend/src/database/cli.ts rollback",
+    "db:seed": "tsx src/backend/src/database/cli.ts seed",
+    "db:export": "tsx src/backend/src/database/cli.ts export",
+    "staff:create": "tsx src/backend/src/database/create-staff.ts"
+  },
+  "dependencies": {
+    "@fontsource/dm-sans": "latest",
+    "@fontsource/fraunces": "latest",
+    "cookie-parser": "latest",
+    "dotenv": "latest",
+    "express": "^5.1.0",
+    "express-rate-limit": "latest",
+    "helmet": "latest",
+    "knex": "^3.1.0",
+    "lucide-react": "latest",
+    "mysql2": "latest",
+    "react": "latest",
+    "react-dom": "latest",
+    "react-router-dom": "latest",
+    "zod": "^4.0.0"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "@playwright/test": "latest",
+    "@tailwindcss/vite": "latest",
+    "@types/cookie-parser": "latest",
+    "@types/express": "latest",
+    "@types/node": "latest",
+    "@types/react": "latest",
+    "@types/react-dom": "latest",
+    "@types/supertest": "latest",
+    "@vitejs/plugin-react": "latest",
+    "concurrently": "latest",
+    "eslint": "^10.10.0",
+    "globals": "latest",
+    "supertest": "latest",
+    "tailwindcss": "latest",
+    "tsx": "latest",
+    "typescript": "~5.9.3",
+    "typescript-eslint": "latest",
+    "vite": "latest",
+    "vitest": "latest"
+  }
+}

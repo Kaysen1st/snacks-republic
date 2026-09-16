@@ -1,0 +1,4 @@
+import { z } from 'zod';
+export const orderSchema=z.object({items:z.array(z.object({variant_id:z.number().int().positive(),quantity:z.number().int().min(1).max(50),option_ids:z.array(z.number().int().positive()).max(12).default([])})).min(1).max(50),customer_name:z.string().trim().min(1).max(100),notes:z.string().trim().max(500).default(''),payment_method:z.enum(['cash','gcash']).optional(),tendered:z.string().regex(/^\d{1,8}(\.\d{1,2})?$/).optional(),reference:z.string().trim().max(100).optional(),expected_total:z.string().regex(/^\d{1,8}(\.\d{1,2})?$/).optional()}).strict();
+export const paymentSchema=z.object({method:z.enum(['cash','gcash']),tendered:z.string().regex(/^\d{1,8}(\.\d{1,2})?$/),reference:z.string().trim().max(100).optional()});
+export const transitionSchema=z.object({status:z.enum(['preparing','ready','completed','cancelled']),reason:z.string().trim().max(500).optional()});
